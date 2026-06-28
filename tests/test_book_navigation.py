@@ -44,10 +44,10 @@ class TestBookNavigation:
                 # click the book
                 home.click_book_by_index(book_index)
 
-                #verify detail page loaded successfully
-                assert detail.is_loaded(), (
-                    f"Detail page did not load for book: '{expected_title}'"
-                )
+                # verify detail page loaded successfully
+                assert (
+                    detail.is_loaded()
+                ), f"Detail page did not load for book: '{expected_title}'"
 
                 # verify H1 matches the title captured on homepage
                 actual_title = detail.get_book_title()
@@ -58,9 +58,9 @@ class TestBookNavigation:
                 )
 
                 # verify book information table is visible
-                assert detail.is_book_info_visible(), (
-                    f"Book info table not visible for: '{expected_title}'"
-                )
+                assert (
+                    detail.is_book_info_visible()
+                ), f"Book info table not visible for: '{expected_title}'"
 
                 # go back to homepage for next iteration
                 detail.go_back_to_homepage()

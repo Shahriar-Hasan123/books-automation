@@ -24,8 +24,7 @@ class TestHomepage:
         current_url = home.get_current_url()
 
         assert current_url == self.EXPECTED_URL, (
-            f"Expected URL: {self.EXPECTED_URL}\n"
-            f"Actual URL:   {current_url}"
+            f"Expected URL: {self.EXPECTED_URL}\n" f"Actual URL:   {current_url}"
         )
 
     @allure.story("Page Title Validation")
@@ -38,8 +37,7 @@ class TestHomepage:
         actual_title = home.get_page_title()
 
         assert actual_title == self.EXPECTED_TITLE, (
-            f"Expected title: {self.EXPECTED_TITLE}\n"
-            f"Actual title:   {actual_title}"
+            f"Expected title: {self.EXPECTED_TITLE}\n" f"Actual title:   {actual_title}"
         )
 
     @allure.story("Headings Visibility")
@@ -56,9 +54,7 @@ class TestHomepage:
 
         for i in range(heading_count):
             heading = headings.nth(i)
-            assert heading.is_visible(), (
-                f"Heading at index {i} is not visible."
-            )
+            assert heading.is_visible(), f"Heading at index {i} is not visible."
 
     @allure.story("Headings Non-Empty Text")
     @allure.severity(allure.severity_level.NORMAL)
@@ -75,9 +71,7 @@ class TestHomepage:
         for i in range(heading_count):
             heading = headings.nth(i)
             text = heading.text_content().strip()
-            assert text != "", (
-                f"Heading at index {i} has empty text."
-            )
+            assert text != "", f"Heading at index {i} has empty text."
 
     @allure.story("Books Section Visibility")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -86,9 +80,9 @@ class TestHomepage:
         """Verify the main books section container is visible on the homepage."""
         home = HomePage(page)
 
-        assert home.is_books_section_visible(), (
-            "Books section is not visible on the homepage."
-        )
+        assert (
+            home.is_books_section_visible()
+        ), "Books section is not visible on the homepage."
 
     @allure.story("Books Section Has Books")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -99,6 +93,6 @@ class TestHomepage:
 
         book_count = home.get_book_count()
 
-        assert book_count >= 1, (
-            f"Expected at least 1 book on homepage. Found: {book_count}"
-        )
+        assert (
+            book_count >= 1
+        ), f"Expected at least 1 book on homepage. Found: {book_count}"
