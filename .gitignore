@@ -1,0 +1,13 @@
+cat > .gitignore << 'EOF'
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+reports/
+allure-results/
+test-results/
+screenshots/
+videos/
+traces/
+.env
+EOF
