@@ -1,0 +1,95 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: ["main", "feature/**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    name: Run Automation Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # Step 1: checkout the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: set up Python
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Step 3: cache pip packages (speeds up future runs)
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Step 4: install Python dependencies
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+
+      # Step 5: install Playwright browsers
+      - name: Install Playwright Browsers
+        run: playwright install chromium --with-deps
+
+      # Step 6: create required output directories
+      - name: Create Output Directories
+        run: mkdir -p reports screenshots videos traces allure-results
+
+      # Step 7: run all tests
+      - name: Run Playwright Tests
+        run: pytest -v
+        continue-on-error: true
+
+      # Step 8: upload HTML report
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: html-report
+          path: reports/report.html
+          retention-days: 30
+
+      # Step 9: upload Allure results
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 30
+
+      # Step 10: upload screenshots (captured on failure)
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots
+          path: screenshots/
+          retention-days: 30
+
+      # Step 11: upload videos (if implemented)
+      - name: Upload Videos
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: videos
+          path: videos/
+          retention-days: 30
+
+      # Step 12: upload traces (if implemented)
+      - name: Upload Traces
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: traces
+          path: traces/
+          retention-days: 30
