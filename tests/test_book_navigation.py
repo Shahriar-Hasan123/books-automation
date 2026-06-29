@@ -49,6 +49,10 @@ class TestBookNavigation:
                     detail.is_loaded()
                 ), f"Detail page did not load for book: '{expected_title}'"
 
+                # ✨ Take screenshot showing detail page with book info
+                safe_title = expected_title[:30].replace(" ", "_").replace("/", "_")
+                detail.take_screenshot(f"navigation_detail_{book_index}_{safe_title}")
+
                 # verify H1 matches the title captured on homepage
                 actual_title = detail.get_book_title()
                 assert actual_title == expected_title, (

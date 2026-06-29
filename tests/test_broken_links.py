@@ -32,6 +32,9 @@ class TestBrokenLinks:
 
         assert len(raw_hrefs) > 0, "No links found on the homepage."
 
+        # ✨ Take screenshot showing all links on the homepage
+        home.take_screenshot("broken_links_homepage")
+
         # Step 2: convert all relative URLs to absolute
         full_urls = [build_full_url(href) for href in raw_hrefs]
 

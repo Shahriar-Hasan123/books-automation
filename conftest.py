@@ -24,7 +24,9 @@ def page(browser_instance: Browser, request) -> Page:
     Create a fresh browser page (tab) for each test function.
     Records video for every test (PASS and FAIL).
     Records trace for every test (PASS and FAIL).
-    Takes screenshot for every test (PASS and FAIL).
+    Takes initial screenshot for reference.
+    Strategic STEP_ screenshots captured during test execution.
+    Failure screenshots captured on test failure.
     """
     # create output folders
     os.makedirs(VIDEOS_DIR, exist_ok=True)
@@ -46,12 +48,16 @@ def page(browser_instance: Browser, request) -> Page:
 
     page: Page = context.new_page()
     page.goto(BASE_URL)
+    
+    # Take initial screenshot at test start (homepage baseline)
+    initial_screenshot_path = f"{SCREENSHOTS_DIR}/INIT_{safe_name}.png"
+    page.screenshot(path=initial_screenshot_path)
 
     yield page
 
     # --- teardown: runs after every test regardless of result ---
 
-    # get test result (PASS or FAIL)
+    # get test result (PASS or FAIL) from pytest hook
     test_failed = (
         request.node.rep_call.failed
         if hasattr(request.node, "rep_call")
@@ -59,9 +65,11 @@ def page(browser_instance: Browser, request) -> Page:
     )
     status = "FAIL" if test_failed else "PASS"
 
-    # take screenshot for every test
-    screenshot_path = f"{SCREENSHOTS_DIR}/{status}_{safe_name}.png"
-    page.screenshot(path=screenshot_path)
+    # Only take failure screenshot if test failed
+    # This captures the state when assertion failed
+    if test_failed:
+        failure_screenshot_path = f"{SCREENSHOTS_DIR}/FAIL_{safe_name}.png"
+        page.screenshot(path=failure_screenshot_path)
 
     # save trace for every test
     trace_path = f"{TRACES_DIR}/{status}_{safe_name}.zip"

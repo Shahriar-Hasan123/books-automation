@@ -96,3 +96,6 @@ class TestHomepage:
         assert (
             book_count >= 1
         ), f"Expected at least 1 book on homepage. Found: {book_count}"
+
+        # ✨ Take screenshot showing validated homepage with all books
+        home.take_screenshot("homepage_validated")

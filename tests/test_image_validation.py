@@ -40,6 +40,9 @@ class TestImageValidation:
                     f"No product images found on page {page_number}."
                 )
 
+                # ✨ Take screenshot showing all images on this page
+                home.take_screenshot(f"images_page_{page_number}")
+
                 # validate each image
                 image_failures = []
 

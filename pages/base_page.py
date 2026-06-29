@@ -1,3 +1,4 @@
+import os
 from playwright.sync_api import Page, Locator
 
 
@@ -60,3 +61,20 @@ class BasePage:
         """
         self.page.goto(url)
         self.page.wait_for_load_state("domcontentloaded")
+
+    def take_screenshot(self, name: str) -> str:
+        """
+        Take a screenshot at a critical test point.
+        Saved as STEP_{name}.png for organization and evidence.
+
+        Args:
+            name: Descriptive name for the step (e.g., 'detail_page_loaded', 'price_compared').
+
+        Returns:
+            The path to the saved screenshot file.
+        """
+        screenshots_dir = "screenshots"
+        os.makedirs(screenshots_dir, exist_ok=True)
+        screenshot_path = f"{screenshots_dir}/STEP_{name}.png"
+        self.page.screenshot(path=screenshot_path)
+        return screenshot_path
