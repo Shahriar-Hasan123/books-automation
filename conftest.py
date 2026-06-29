@@ -18,8 +18,15 @@ def browser_instance():
 
 @pytest.fixture(scope="function")
 def page(browser_instance: Browser) -> Page:
-    """Create a fresh browser page (tab) for each test function."""
-    context = browser_instance.new_context()
+    """
+    Create a fresh browser page (tab) for each test function.
+    Overrides pytest-playwright's default page fixture to use
+    our session-scoped browser instance for performance.
+    """
+    context = browser_instance.new_context(
+        # explicitly ignore HTTPS errors for test site
+        ignore_https_errors=True
+    )
     page: Page = context.new_page()
     page.goto(BASE_URL)
     yield page
@@ -36,21 +43,14 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
 
-    # only capture on actual test failure (not setup/teardown)
     if report.when == "call" and report.failed:
         page = item.funcargs.get("page")
         if page:
-            # create screenshots folder if it doesn't exist
             os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
-
-            # safe filename from test name
             safe_name = item.nodeid.replace("/", "_").replace("::", "_")
             screenshot_path = f"{SCREENSHOTS_DIR}/{safe_name}.png"
-
-            # save screenshot
             page.screenshot(path=screenshot_path)
 
-            # attach to HTML report
             pytest_html = item.config.pluginmanager.getplugin("html")
             if pytest_html:
                 extra = getattr(report, "extra", [])
