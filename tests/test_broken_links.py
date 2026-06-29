@@ -1,6 +1,9 @@
 import allure
 import pytest
 import requests
+import certifi
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from pages.home_page import HomePage
 from utils.helpers import build_full_url
@@ -39,16 +42,29 @@ class TestBrokenLinks:
 
             broken_links = []
 
-            # send request to each URL
+            # prepare a session with retries and certifi-backed verification
+            session = requests.Session()
+            session.verify = certifi.where()
+            retries = Retry(
+                total=1,
+                backoff_factor=0.2,
+                status_forcelist=(429, 500, 502, 503, 504),
+                allowed_methods=("GET", "HEAD"),
+            )
+            adapter = HTTPAdapter(max_retries=retries)
+            session.mount("https://", adapter)
+            session.mount("http://", adapter)
+            session.trust_env = False
+            session.headers.update({
+                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0 Safari/537.36"
+            })
+
+            # send request to each URL using the session
             for url in full_urls:
                 try:
-                    response = requests.get(
-                        url, timeout=self.REQUEST_TIMEOUT, allow_redirects=True
-                    )
+                    response = session.get(url, timeout=self.REQUEST_TIMEOUT, allow_redirects=True)
                     if response.status_code != self.HTTP_OK:
-                        broken_links.append(
-                            {"url": url, "status": response.status_code}
-                        )
+                        broken_links.append({"url": url, "status": response.status_code})
 
                 except requests.exceptions.RequestException as error:
                     broken_links.append({"url": url, "status": f"ERROR: {str(error)}"})
