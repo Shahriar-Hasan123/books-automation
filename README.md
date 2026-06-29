@@ -1,355 +1,288 @@
-# 📚 Enterprise UI Automation Framework — Books to Scrape
+# Books Automation — UI Testing Framework
 
 ![Playwright Tests](https://github.com/Shahriar-Hasan123/books-automation/actions/workflows/playwright.yml/badge.svg)
 
-A production-ready UI automation framework built with **Playwright** and **Pytest**
-that validates website functionality, data consistency, UI elements, navigation
-behavior, and quality assurance scenarios for
-[Books to Scrape](https://books.toscrape.com/index.html).
+A production-ready automation framework built with Playwright and Pytest for testing [books.toscrape.com](https://books.toscrape.com). Validates UI elements, navigation, data consistency, and website functionality with automated reporting.
 
 ---
 
-## 📋 Table of Contents
+## 1. Project Overview
 
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation Guide](#installation-guide)
-- [Environment Setup](#environment-setup)
-- [Running Tests](#running-tests)
-- [Project Structure](#project-structure)
-- [Test Case Coverage](#test-case-coverage)
-- [Report Generation Guide](#report-generation-guide)
-- [HTML Report Guide](#html-report-guide)
-- [Allure Report Guide](#allure-report-guide)
-- [GitHub Actions Setup](#github-actions-setup)
-- [Design Decisions](#design-decisions)
-- [Known Limitations](#known-limitations)
+This framework provides comprehensive UI testing for the Books to Scrape website using industry-standard practices:
+
+- **Page Object Model** architecture for clean, maintainable code
+- **5 comprehensive test cases** covering homepage validation, navigation, data consistency, link validation, and image verification
+- **Automated evidence capture** — screenshots, videos, and traces attached to reports
+- **CI/CD integration** — GitHub Actions pipeline for continuous testing
+- **Professional reporting** — HTML and Allure reports with multimedia attachments
+
+Designed for easy setup and maintenance by any engineer without additional guidance.
 
 ---
 
-## 🎯 Project Overview
+## 2. Features
 
-This framework automates end-to-end UI testing for the
-[Books to Scrape](https://books.toscrape.com/index.html) website.
-It is designed following industry-standard practices including the
-**Page Object Model (POM)**, **OOP**, **SOLID**, and **DRY** principles.
-
-The framework:
-- Validates homepage content and structure
-- Verifies random book navigation and detail page accuracy
-- Checks data consistency between homepage and detail pages
-- Detects broken hyperlinks across the homepage
-- Validates product image attributes across multiple pages
-- Generates HTML and Allure reports automatically
-- Runs fully automated via GitHub Actions CI/CD on every push and pull request
+- ✅ **Page Object Model (POM)** — Clean separation of page interactions from test logic
+- ✅ **5 Test Cases** — Homepage validation, navigation, consistency, broken links, image validation
+- ✅ **Random Test Data** — Dynamic book selection for varied test coverage
+- ✅ **Link Validation** — HTTP 200 checks on all unique homepage links
+- ✅ **Image Validation** — Attribute verification across paginated results
+- ✅ **Multimedia Capture** — Screenshots, videos, and traces for every test
+- ✅ **Professional Reports** — HTML and Allure reports with embedded evidence
+- ✅ **No Hardcoded Waits** — Reliable synchronization throughout
+- ✅ **GitHub Actions CI/CD** — Automatic testing on every push and PR
+- ✅ **Clear Documentation** — Docstrings, meaningful naming, organized structure
 
 ---
 
-## ✨ Features
+## 3. Tech Stack
 
-- ✅ Page Object Model (POM) architecture for clean, reusable code
-- ✅ 5 comprehensive test cases covering all functional requirements
-- ✅ Random book selection for dynamic test coverage
-- ✅ Broken link detection using Playwright request context
-- ✅ Product image attribute validation with pagination support
-- ✅ Data consistency checks across pages
-- ✅ Automatic screenshot capture for every test (PASS and FAIL)
-- ✅ Video recording for every test (PASS and FAIL)
-- ✅ Trace capture for every test (PASS and FAIL)
-- ✅ HTML report generation via pytest-html
-- ✅ Allure report generation via allure-pytest
-- ✅ GitHub Actions CI/CD pipeline with artifact upload
-- ✅ No hardcoded waits — reliable synchronization strategies throughout
-- ✅ Meaningful naming conventions and method docstrings
-
----
-
-## 🛠️ Tech Stack
-
-| Tool | Version | Purpose |
-|------|---------|---------|
+| Component | Version | Purpose |
+|-----------|---------|---------|
 | Python | 3.12 | Programming language |
 | Playwright | 1.49.0 | Browser automation |
 | Pytest | 8.2.2 | Test framework |
-| pytest-playwright | 0.5.0 | Playwright-Pytest integration |
-| pytest-html | 4.1.1 | HTML report generation |
-| allure-pytest | 2.13.5 | Allure report generation |
-| requests | 2.32.3 | HTTP client for link validation |
-| GitHub Actions | - | CI/CD pipeline |
-| Allure CLI | 2.27.0 | Allure report viewer |
+| pytest-html | 4.1.1 | HTML reports |
+| allure-pytest | 2.13.5 | Allure reports |
+| GitHub Actions | Latest | CI/CD pipeline |
+| Allure CLI | 2.27.0 | Report viewer |
+| Java | 17+ | Allure dependency |
 
 ---
 
-## 📥 Installation Guide
+## 4. Installation Guide
 
 ### Prerequisites
 
-Make sure these are installed on your machine:
-
-- Python 3.10 or higher
+- Python 3.10+
 - Git
-- Java 17+ (required for Allure CLI)
+- Java 17+ (for Allure)
 
-### 1. Clone the repository
+### Quick Setup
 
 ```bash
+# 1. Clone repository
 git clone https://github.com/Shahriar-Hasan123/books-automation.git
 cd books-automation
-```
 
-### 2. Create and activate virtual environment
-
-```
-# Create virtual environment
+# 2. Create and activate virtual environment
 python3 -m venv venv
+source venv/bin/activate          # Linux/Mac
+# or: venv\Scripts\activate        # Windows
 
-# Activate on Mac/Linux
-source venv/bin/activate
-
-# Activate on Windows
-venv\Scripts\activate
-```
-
-### 3. Install Python dependencies
-
-```
+# 3. Install Python dependencies
 pip install -r requirements.txt
-```
 
-### 4. Install Playwright browser
-
-```
+# 4. Install Playwright browser
 playwright install chromium
-```
 
-### 5. Install Allure CLI (without sudo)
-
-```
-# Download Allure
+# 5. Install Allure and Java (Linux/Mac)
 wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
 tar -xzf allure-2.27.0.tgz
 rm allure-2.27.0.tgz
 
-# Download Java 17 (if not installed)
 wget https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.11%2B9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.11_9.tar.gz
 tar -xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.11_9.tar.gz
 rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.11_9.tar.gz
 
-# Create allure.sh launcher
+# 6. Create Allure launcher
 echo '#!/bin/bash
 export JAVA_HOME="$HOME/Documents/books-automation/jdk-17.0.11+9"
 export PATH="$JAVA_HOME/bin:$PATH"
 ~/Documents/books-automation/allure-2.27.0/bin/allure "$@"' > allure.sh
-
 chmod +x allure.sh
 
-# Verify
+# 7. Verify
 ./allure.sh --version
 ```
 
 ---
 
-## ⚙️ Environment Setup
+## 5. Environment Setup
 
-### Verify installation
+### Verify Installation
 
-```
-# Check Python
-python3 --version
-
-# Check Playwright
-playwright --version
-
-# Check Pytest
-pytest --version
-
-# Check Allure
-./allure.sh --version
+```bash
+python3 --version      # Python 3.12+
+playwright --version   # Playwright installed
+pytest --version       # Pytest 8.2.2+
+./allure.sh --version  # Allure 2.27.0
 ```
 
-### Verify test collection
+### Verify Test Collection
 
-```
+```bash
 pytest --co -q
-```
-
-Expected output:
-
-```
-10 tests collected
+# Expected: 10 tests collected
 ```
 
 ---
 
-## 🚀 Running Tests
+## 6. Running Tests
 
-### Run all tests
+### All Tests
 
-```
+```bash
 pytest -v
 ```
 
-### Run a specific test case by marker
+### By Test Marker
 
-```
-# TC1 - Homepage Validation
-pytest -m homepage -v
-
-# TC2 - Random Book Navigation
-pytest -m navigation -v
-
-# TC3 - Book Data Consistency
-pytest -m consistency -v
-
-# TC4 - Broken Link Validation
-pytest -m broken_links -v
-
-# TC5 - Product Image Validation
-pytest -m images -v
+```bash
+pytest -m homepage -v           # TC1: Homepage validation
+pytest -m navigation -v         # TC2: Random navigation
+pytest -m consistency -v        # TC3: Data consistency
+pytest -m broken_links -v       # TC4: Broken links
+pytest -m images -v            # TC5: Image validation
 ```
 
-### Run a specific test file
+### Using Makefile
 
-```
-pytest tests/test_homepage.py -v
-pytest tests/test_book_navigation.py -v
-pytest tests/test_data_consistency.py -v
-pytest tests/test_broken_links.py -v
-pytest tests/test_image_validation.py -v
-```
-
-### Run with Makefile shortcuts
-
-```
-make test          # run all tests
-make report-html   # open HTML report
-make report-allure # generate and open Allure report
-make clean         # clean all generated files
+```bash
+make test                  # Run all tests
+make report-html          # Open HTML report
+make report-allure        # Generate and open Allure report
+make clean                # Clean generated files
 ```
 
 ---
 
-## 📁 Project Structure
+## 7. Project Structure
 
 ```
 books-automation/
-│
-├── .github/
-│   └── workflows/
-│       └── playwright.yml          # GitHub Actions CI/CD workflow
-│
-├── pages/                          # Page Object Model classes
-│   ├── __init__.py
-│   ├── base_page.py                # Shared methods for all pages
-│   ├── home_page.py                # Homepage interactions
-│   └── detail_page.py             # Book detail page interactions
-│
-├── tests/                          # All test files
-│   ├── __init__.py
-│   ├── test_homepage.py            # TC1: Homepage validation
-│   ├── test_book_navigation.py     # TC2: Random book navigation
-│   ├── test_data_consistency.py    # TC3: Data consistency
-│   ├── test_broken_links.py        # TC4: Broken link validation
-│   └── test_image_validation.py    # TC5: Product image validation
-│
-├── utils/                          # Helper utilities
-│   ├── __init__.py
-│   └── helpers.py                  # URL builder and shared helpers
-│
-├── reports/                        # Generated HTML reports (git ignored)
-├── allure-results/                 # Raw Allure data (git ignored)
-├── allure-report/                  # Generated Allure report (git ignored)
-├── screenshots/                    # Test screenshots (git ignored)
-├── videos/                         # Test videos (git ignored)
-├── traces/                         # Playwright traces (git ignored)
-│
-├── conftest.py                     # Global fixtures and hooks
-├── pytest.ini                      # Pytest configuration
-├── requirements.txt                # Python dependencies
-├── Makefile                        # Shortcut commands
-└── README.md                       # Project documentation
+├── .github/workflows/playwright.yml    # CI/CD pipeline
+├── pages/                              # Page Object Models
+│   ├── base_page.py                    # Shared methods
+│   ├── home_page.py                    # Homepage interactions
+│   └── detail_page.py                  # Detail page interactions
+├── tests/                              # Test cases
+│   ├── test_homepage.py                # TC1
+│   ├── test_book_navigation.py         # TC2
+│   ├── test_data_consistency.py        # TC3
+│   ├── test_broken_links.py            # TC4
+│   └── test_image_validation.py        # TC5
+├── utils/                              # Helper utilities
+│   └── helpers.py                      # URL builder
+├── conftest.py                         # Fixtures and hooks
+├── pytest.ini                          # Configuration
+├── requirements.txt                    # Dependencies
+├── Makefile                            # Commands
+└── README.md                           # This file
 ```
 
 ---
 
-## 🧪 Test Case Coverage
+## 8. Test Case Coverage
 
 ### TC1 — Homepage Validation
 
-| Check | Description |
-|-------|-------------|
-| URL | Page URL matches expected value |
-| Title | Browser tab title matches expected value |
-| Headings | All h1–h6 headings are visible |
-| Heading text | Every heading contains non-empty text |
-| Books section | Books container is visible |
-| Book count | At least one book is present |
+**Purpose:** Verify homepage structure, title, and content visibility
+
+| Check | Details |
+|-------|---------|
+| URL Correctness | Page URL matches expected value |
+| Page Title | Browser title matches expected value |
+| Headings Visible | All h1–h6 headings are visible |
+| Heading Content | All headings contain non-empty text |
+| Books Section | Books container is visible |
+| Book Presence | At least one book exists |
 
 ### TC2 — Random Book Navigation
 
-| Check | Description |
-|-------|-------------|
-| Random selection | 5 books randomly selected from homepage |
-| Page load | Each detail page loads successfully |
-| Title match | H1 on detail page matches homepage title |
-| Book info | Product information table is visible |
-| Navigation | Browser navigates back to homepage after each book |
+**Purpose:** Verify book detail page loads and matches homepage data
+
+| Check | Details |
+|-------|---------|
+| Random Selection | 5 books randomly selected |
+| Page Load | Detail page loads successfully |
+| Title Match | Detail page H1 matches homepage title |
+| Book Info Visible | Product info table visible |
+| Navigation Works | Browser back button works |
 
 ### TC3 — Book Data Consistency
 
-| Check | Description |
-|-------|-------------|
-| Random selection | 5 books randomly selected from homepage |
-| Title consistency | Homepage title matches detail page title |
-| Price consistency | Homepage price matches detail page price |
-| No mismatches | Zero data inconsistencies across all 5 books |
+**Purpose:** Verify title and price match across pages
+
+| Check | Details |
+|-------|---------|
+| Random Selection | 5 books randomly selected |
+| Title Consistency | Homepage title = Detail page title |
+| Price Consistency | Homepage price = Detail page price |
+| All Match | Zero mismatches across all books |
 
 ### TC4 — Broken Link Validation
 
-| Check | Description |
-|-------|-------------|
-| Link collection | All anchor href values collected from homepage |
-| Deduplication | Duplicate URLs removed before checking |
-| HTTP status | Every unique URL returns HTTP 200 |
-| Error handling | Network errors reported clearly |
+**Purpose:** Verify all homepage links return HTTP 200
+
+| Check | Details |
+|-------|---------|
+| Link Collection | All anchor hrefs collected |
+| Deduplication | Duplicate URLs removed |
+| HTTP Status | All URLs return HTTP 200 |
+| Error Reporting | All failures reported together |
 
 ### TC5 — Product Image Validation
 
-| Check | Description |
-|-------|-------------|
-| Visibility | Each image is visible on the page |
-| src attribute | src exists and is not empty |
-| alt attribute | alt exists and is not empty |
-| class attribute | class contains "thumbnail" |
-| Pagination | Validation repeats for up to 5 pages |
+**Purpose:** Verify product images have required attributes
+
+| Check | Details |
+|-------|---------|
+| Visibility | Image is visible on page |
+| src Attribute | src exists and is not empty |
+| alt Attribute | alt exists and is not empty |
+| class Attribute | class contains "thumbnail" |
+| Multiple Pages | Validation repeats for up to 5 pages |
 
 ---
 
-## 📊 Report Generation Guide
+## 9. Report Generation Guide
 
-### HTML Report Guide
+### HTML Report
 
-HTML report is generated automatically every time you run tests:
+Generated automatically after every test run:
 
-```
+```bash
 pytest -v
+# Report saved to: reports/report.html
 ```
 
-Report is saved to:
+**Contents:**
+- Test pass/fail summary
+- Individual test results with duration
+- Failure screenshots embedded
+- Error messages and tracebacks
 
-```
-reports/report.html
+### Allure Report
+
+```bash
+# Generate from raw data
+./allure.sh generate allure-results --clean -o allure-report
+
+# View in browser
+./allure.sh open allure-report
+
+# Or use shortcut
+make report-allure
 ```
 
-Open the report:
+**Contents:**
+- Test suites grouped by feature
+- Pass/fail breakdown with charts
+- Timeline view of execution
+- Severity levels per test
+- Screenshots, videos, and traces per test
 
-```
-# Linux
+---
+
+## 10. HTML Report Guide
+
+The HTML report is self-contained and opens in any browser:
+
+**How to View:**
+```bash
+# Linux/Mac
 xdg-open reports/report.html
-
-# Mac
-open reports/report.html
 
 # Windows
 start reports/report.html
@@ -358,184 +291,154 @@ start reports/report.html
 make report-html
 ```
 
-The HTML report shows:
+**Report Information:**
+- **Summary** — Total passed, failed, skipped tests
+- **Execution Time** — Duration per test and total
+- **Test Details** — Step-by-step execution info
+- **Screenshots** — Failure screenshots embedded
+- **Errors** — Full error messages and stack traces
 
-- Total tests passed/failed
-- Test duration
-- Failure details with error messages
-- Screenshots embedded for failed tests
-
----
-
-## 🎨 HTML Report Guide
-
-HTML report is generated automatically every time you run tests. The report includes:
-
-- **Summary** — Total passed, failed, skipped test counts
-- **Test Results** — Individual test details with pass/fail status
-- **Duration** — Execution time for each test
-- **Screenshots** — Embedded images for failed tests
-- **Error Messages** — Full error details and tracebacks
+The report is fully responsive and printable.
 
 ---
 
-## 📈 Allure Report Guide
+## 11. Allure Report Guide
 
-**Step 1 — Run tests** (generates raw Allure data):
+Allure provides detailed multimedia reports with better visualization than HTML reports.
 
-```
+**Step 1: Run Tests**
+```bash
 pytest -v
+# Generates raw data in allure-results/
 ```
 
-Raw data is saved to `allure-results/`
-
-**Step 2 — Generate the report:**
-
-```
+**Step 2: Generate Report**
+```bash
 ./allure.sh generate allure-results --clean -o allure-report
 ```
 
-**Step 3 — Open the report:**
-
-```
+**Step 3: View Report**
+```bash
 ./allure.sh open allure-report
 ```
 
-Or use the Makefile shortcut:
-
-```
-make report-allure
-```
-
-The Allure report shows:
-
-- Test suites grouped by feature
-- Individual test steps
-- Severity levels (Critical, Normal)
-- Pass/fail breakdown charts
-- Timeline view
-- Screenshots, videos, and traces per test
+**Report Features:**
+- Suites view with hierarchical test organization
+- Behaviors (Features) grouped by story
+- Graphs showing pass/fail trends
+- Timeline showing test execution order
+- **Multimedia Attachments:**
+  - 📸 Screenshots (Initial state, validation steps, failure state)
+  - 🎥 Video recording (Full test playback in WebM format)
+  - 📦 Playwright trace (For step-by-step replay in Playwright Inspector)
 
 ---
 
-## ⚙️ GitHub Actions Setup
+## 12. GitHub Actions Setup
 
-### Workflow file location
+### Workflow File
 
-```
-.github/workflows/playwright.yml
-```
+Location: `.github/workflows/playwright.yml`
 
 ### Triggers
 
-The workflow runs automatically on:
-
-- Every **push** to `main` or any `feature/**` branch
-- Every **pull request** targeting `main`
+Runs automatically on:
+- Push to `main` or `feature/**` branches
+- Pull requests targeting `main`
 
 ### Pipeline Steps
 
 ```
-1. Checkout Repository
-2. Set Up Python 3.12
-3. Cache pip packages
-4. Install Python Dependencies
-5. Install Playwright Browsers (with system dependencies)
-6. Create Output Directories
-7. Run All Tests
-8. Upload HTML Report artifact
-9. Upload Allure Results artifact
-10. Upload Screenshots artifact
-11. Upload Videos artifact
-12. Upload Traces artifact
+1. Checkout code
+2. Setup Python 3.12
+3. Cache pip dependencies
+4. Install Python packages
+5. Install Playwright browsers
+6. Create output directories
+7. Run all tests
+8. Upload HTML report artifact
+9. Upload Allure results artifact
+10. Upload screenshots artifact
+11. Upload videos artifact
+12. Upload traces artifact
 ```
 
-### Downloading Artifacts
+### Download Artifacts from GitHub
 
-1. Go to your repository on GitHub
-2. Click the **Actions** tab
-3. Click on any completed workflow run
-4. Scroll to the **Artifacts** section at the bottom
-5. Download:
-
-- `html-report` → open `report.html` in browser
-- `allure-results` → run `./allure.sh generate` to view
-- `screenshots` → PASS/FAIL prefixed images per test
-- `videos` → PASS/FAIL prefixed recordings per test
-- `traces` → PASS/FAIL prefixed traces per test
-
-### Viewing Allure Results from CI
-
-```
-# After downloading allure-results artifact and unzipping:
-./allure.sh generate allure-results --clean -o allure-report
-./allure.sh open allure-report
-```
+1. Go to repository → **Actions** tab
+2. Click on completed workflow run
+3. Scroll to **Artifacts** section
+4. Download desired artifact:
+   - `html-report` — Open `report.html` in browser
+   - `allure-results` — Run `./allure.sh generate` locally
+   - `screenshots` — View test evidence images
+   - `videos` — Watch test recordings
+   - `traces` — Use with Playwright Inspector
 
 ---
 
-## 🏗️ Design Decisions
+## 13. Design Decisions
 
 ### Page Object Model (POM)
 
-All page interactions are encapsulated in dedicated classes inside `pages/`.
-Tests never interact with HTML selectors directly — they call page methods.
-This ensures DRY (no duplicated locator logic) and makes maintenance easy.
+All page interactions encapsulated in `pages/` classes. Tests call page methods, never direct selectors. **Benefits:** DRY principle, easy maintenance, single point of change.
 
 ### BasePage Inheritance
 
-`BasePage` contains shared methods (`wait_for_element`, `is_element_visible`,
-`get_current_url`, etc.). All page classes inherit from `BasePage`.
-This follows the SOLID Open/Closed principle.
+Shared methods (`wait_for_element`, `is_element_visible`, `take_screenshot`) in `BasePage`. All pages inherit. **Benefits:** Code reuse, SOLID Open/Closed principle.
 
 ### No Hardcoded Waits
 
-`time.sleep()` is never used. All synchronization uses Playwright's built-in
-`wait_for_element()`, `wait_for_load_state()`, and element-level `wait_for()`
-methods. This makes tests fast and reliable.
+No `time.sleep()` anywhere. Uses Playwright's built-in `wait_for_element()`, `wait_for_load_state()`, and element-level `wait_for()`. **Benefits:** Fast, reliable, no flaky tests.
 
-### Selectors as Class Constants
+### Selectors as Constants
 
-All CSS selectors are defined as class-level constants in page objects.
-If the website changes its HTML structure, only the constant needs updating —
-not every test that uses it.
+All CSS selectors defined as class constants. When HTML changes, only update the constant. **Benefits:** Single point of change, easy refactoring.
 
-### Playwright Request Context for Link Validation
+### Playwright Request Context for Links
 
-TC4 uses `page.request.get()` instead of the `requests` library.
-This shares the browser session, handles SSL correctly, and sends proper
-browser headers — avoiding connection resets and SSL errors.
+TC4 uses `page.request.get()` instead of `requests` library. Shares browser session, handles SSL correctly. **Benefits:** Avoids connection resets, proper headers.
 
-### Collect All Failures Before Asserting
+### Collect All Failures
 
-TC4 and TC5 collect all failures into a list before calling `pytest.fail()`.
-This ensures you see ALL broken links or ALL bad images in one run —
-not just the first failure.
+TC4 and TC5 collect all failures before asserting. See ALL broken links/bad images in one run. **Benefits:** Faster debugging, complete visibility.
 
-### Session-Scoped Browser, Function-Scoped Page
+### Session Browser, Function Context
 
-The browser instance is shared across all tests (session scope) for performance.
-Each test gets its own browser context and page (function scope) for isolation.
-No test state bleeds into another.
+Browser shared across tests (performance). Each test gets fresh context/page (isolation). **Benefits:** Balance between speed and test independence.
 
-### Evidence for Every Test
+### Evidence for All Tests
 
-Screenshots, videos, and traces are captured for every test (PASS and FAIL).
-This provides full audit trails for QA review, not just failure debugging.
+Captures screenshots, videos, traces for PASS and FAIL. Provides audit trail, not just debugging. **Benefits:** QA confidence, compliance, troubleshooting.
 
 ---
 
-## ⚠️ Known Limitations
+## 14. Known Limitations
 
-- **TC4 Broken Links** uses Playwright's request context. Some links that
-require JavaScript rendering may not be validated accurately via HTTP request.
-- **TC2 and TC3** randomly select 5 books from the first page only (20 books).
-Books on subsequent pages are not included in random selection.
-- **Allure CLI** requires Java 17+ installed locally. On machines without
-sudo access, Java must be installed manually as shown in the Installation Guide.
-- **Video files** are in `.webm` format. On Windows, you may need a media
-player like VLC to view them.
-- **Allure report** requires running `allure generate` after every test run.
-It does not auto-refresh like the HTML report.
-- **Test execution time** varies. TC4 (broken links) makes HTTP requests to
-all homepage URLs and typically takes 30–60 seconds depending on network speed.
+- **Broken Link Validation (TC4)** — Uses HTTP requests; links requiring JavaScript rendering may not validate accurately
+- **Random Book Selection (TC2, TC3)** — Only selects from first page (20 books); subsequent pages not included
+- **Allure CLI** — Requires Java 17+; manual installation needed on machines without sudo
+- **Video Format** — WebM format; Windows users may need VLC player to view
+- **Allure Report** — Requires manual `allure generate` after each test run (no auto-refresh)
+- **Execution Time** — TC4 (broken links) typically 30–60 seconds due to HTTP requests
+- **Trace Files** — ZIP files can be large (5–50 MB per test); archived in CI but not auto-deleted locally
+
+---
+
+## Support & Maintenance
+
+For issues or improvements, refer to individual page objects and test files for detailed docstrings. Each method explains its purpose and usage.
+
+**Quick Commands:**
+```bash
+make test              # Run tests
+make report-html       # View HTML report
+make report-allure     # View Allure report
+make clean             # Clean artifacts
+```
+
+---
+
+**Last Updated:** June 2026  
+**Framework Version:** 1.0.0  
+**Status:** Production Ready
