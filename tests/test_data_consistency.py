@@ -52,7 +52,7 @@ class TestDataConsistency:
                 detail_title = detail.get_book_title()
                 detail_price = detail.get_book_price()
 
-                # ✨ Take screenshot showing detail page with title and price visible
+                # Take screenshot showing detail page with title and price visible
                 safe_title = homepage_title[:30].replace(" ", "_").replace("/", "_")
                 detail.take_screenshot(f"consistency_detail_{book_index}_{safe_title}")
 

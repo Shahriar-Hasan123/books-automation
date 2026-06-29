@@ -40,7 +40,7 @@ class TestImageValidation:
                     f"No product images found on page {page_number}."
                 )
 
-                # ✨ Take screenshot showing all images on this page
+                # Take screenshot showing all images on this page
                 home.take_screenshot(f"images_page_{page_number}")
 
                 # validate each image
@@ -78,7 +78,7 @@ class TestImageValidation:
                             f"class does not contain 'thumbnail' (got: '{class_attr}')"
                         )
 
-                # Step 3: report all image failures for this page at once
+                # report all image failures for this page at once
                 if image_failures:
                     failure_details = "\n".join(image_failures)
                     pytest.fail(
@@ -86,7 +86,7 @@ class TestImageValidation:
                         f"{failure_details}"
                     )
 
-            # Step 4: try to go to next page
+            # try to go to next page
             has_next = home.click_next_page()
 
             if not has_next:

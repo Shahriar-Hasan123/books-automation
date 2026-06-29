@@ -151,24 +151,41 @@ make clean                # Clean generated files
 
 ```
 books-automation/
-├── .github/workflows/playwright.yml    # CI/CD pipeline
-├── pages/                              # Page Object Models
-│   ├── base_page.py                    # Shared methods
-│   ├── home_page.py                    # Homepage interactions
-│   └── detail_page.py                  # Detail page interactions
-├── tests/                              # Test cases
-│   ├── test_homepage.py                # TC1
-│   ├── test_book_navigation.py         # TC2
-│   ├── test_data_consistency.py        # TC3
-│   ├── test_broken_links.py            # TC4
-│   └── test_image_validation.py        # TC5
-├── utils/                              # Helper utilities
-│   └── helpers.py                      # URL builder
-├── conftest.py                         # Fixtures and hooks
-├── pytest.ini                          # Configuration
-├── requirements.txt                    # Dependencies
-├── Makefile                            # Commands
-└── README.md                           # This file
+│
+├── .github/
+│   └── workflows/
+│       └── playwright.yml           # GitHub Actions CI/CD workflow
+│
+├── pages/                           # Page Object Model classes
+│   ├── init.py
+│   ├── base_page.py                 # Shared methods for all pages
+│   ├── home_page.py                 # Homepage-specific interactions
+│   └── detail_page.py              # Book detail page interactions
+│
+├── tests/                           # All test files
+│   ├── init.py
+│   ├── test_homepage.py             # TC1: Homepage validation
+│   ├── test_book_navigation.py      # TC2: Random book navigation
+│   ├── test_data_consistency.py     # TC3: Data consistency
+│   ├── test_broken_links.py         # TC4: Broken link validation
+│   └── test_image_validation.py     # TC5: Product image validation
+│
+├── utils/                           # Utility helpers
+│   ├── init.py
+│   └── helpers.py                   # URL builder and shared helpers
+│
+├── reports/                         # Generated HTML reports     [git ignored]
+├── allure-results/                  # Raw Allure result data     [git ignored]
+├── allure-report/                   # Generated Allure report    [git ignored]
+├── screenshots/                     # Test screenshots           [git ignored]
+├── videos/                          # Test video recordings      [git ignored]
+├── traces/                          # Playwright trace files     [git ignored]
+│
+├── conftest.py                      # Global fixtures and hooks
+├── pytest.ini                       # Pytest configuration
+├── requirements.txt                 # Python dependencies
+├── Makefile                         # Shortcut commands
+└── README.md                        # Project documentatio
 ```
 
 ---

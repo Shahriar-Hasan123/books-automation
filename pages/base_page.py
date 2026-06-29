@@ -13,9 +13,6 @@ class BasePage:
     def __init__(self, page: Page) -> None:
         """
         Initialize BasePage with a Playwright Page instance.
-
-        Args:
-            page: The Playwright Page object representing the browser tab.
         """
         self.page = page
 
@@ -30,12 +27,6 @@ class BasePage:
     def wait_for_element(self, selector: str) -> Locator:
         """
         Wait for an element to be visible on the page and return it.
-
-        Args:
-            selector: CSS selector string to locate the element.
-
-        Returns:
-            A Playwright Locator object for the matched element.
         """
         locator = self.page.locator(selector)
         locator.first.wait_for(state="visible")
@@ -44,21 +35,12 @@ class BasePage:
     def is_element_visible(self, selector: str) -> bool:
         """
         Check if an element is visible on the page.
-
-        Args:
-            selector: CSS selector string to locate the element.
-
-        Returns:
-            True if element is visible, False otherwise.
         """
         return self.page.locator(selector).first.is_visible()
 
     def navigate_to(self, url: str) -> None:
         """
         Navigate the browser to a given URL and wait for it to load.
-
-        Args:
-            url: The full URL to navigate to.
         """
         self.page.goto(url)
         self.page.wait_for_load_state("domcontentloaded")
@@ -67,12 +49,6 @@ class BasePage:
         """
         Take a screenshot at a critical test point and attach to Allure report.
         Saved as STEP_{name}.png for organization and evidence.
-
-        Args:
-            name: Descriptive name for the step (e.g., 'detail_page_loaded', 'price_compared').
-
-        Returns:
-            The path to the saved screenshot file.
         """
         screenshots_dir = "screenshots"
         os.makedirs(screenshots_dir, exist_ok=True)

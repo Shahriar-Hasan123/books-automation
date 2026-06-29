@@ -27,22 +27,22 @@ class TestBrokenLinks:
         """
         home = HomePage(page)
 
-        # Step 1: collect all unique hrefs from homepage
+        # collect all unique hrefs from homepage
         raw_hrefs = home.get_all_links()
 
         assert len(raw_hrefs) > 0, "No links found on the homepage."
 
-        # ✨ Take screenshot showing all links on the homepage
+        #  Take screenshot showing all links on the homepage
         home.take_screenshot("broken_links_homepage")
 
-        # Step 2: convert all relative URLs to absolute
+        # convert all relative URLs to absolute
         full_urls = [build_full_url(href) for href in raw_hrefs]
 
         with allure.step(f"Checking {len(full_urls)} unique links"):
 
             broken_links = []
 
-            # Step 3: use Playwright's built-in request context
+            # use Playwright's built-in request context
             # This reuses the same browser session — handles SSL and headers correctly
             for url in full_urls:
                 try:
@@ -55,7 +55,7 @@ class TestBrokenLinks:
                 except Exception as error:
                     broken_links.append({"url": url, "status": f"ERROR: {str(error)}"})
 
-        # Step 4: assert no broken links were found
+        # assert no broken links were found
         if broken_links:
             failure_details = "\n".join(
                 f"  [{item['status']}] {item['url']}" for item in broken_links

@@ -12,7 +12,7 @@ TRACES_DIR = "traces"
 
 @pytest.fixture(scope="session")
 def browser_instance():
-    """Launch a single browser for the entire test session."""
+    """Launch the browser for the test session."""
     with sync_playwright() as playwright:
         browser: Browser = playwright.chromium.launch(headless=True)
         yield browser
@@ -21,14 +21,7 @@ def browser_instance():
 
 @pytest.fixture(scope="function")
 def page(browser_instance: Browser, request) -> Page:
-    """
-    Create a fresh browser page (tab) for each test function.
-    Records video for every test (PASS and FAIL).
-    Records trace for every test (PASS and FAIL).
-    Takes initial screenshot for reference.
-    Strategic STEP_ screenshots captured during test execution.
-    Failure screenshots captured on test failure.
-    """
+    """Create a fresh browser page and capture test evidence."""
     # create output folders
     os.makedirs(VIDEOS_DIR, exist_ok=True)
     os.makedirs(TRACES_DIR, exist_ok=True)
@@ -121,11 +114,7 @@ def page(browser_instance: Browser, request) -> Page:
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """
-    Pytest hook that runs after each test.
-    Stores test result on the node so the page fixture teardown can read it.
-    Attaches screenshot to HTML report on failure.
-    """
+    """Store test result and attach failure screenshot."""
     outcome = yield
     report = outcome.get_result()
 
