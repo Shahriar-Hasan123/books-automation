@@ -1,4 +1,5 @@
 import os
+import allure
 from playwright.sync_api import Page, Locator
 
 
@@ -64,7 +65,7 @@ class BasePage:
 
     def take_screenshot(self, name: str) -> str:
         """
-        Take a screenshot at a critical test point.
+        Take a screenshot at a critical test point and attach to Allure report.
         Saved as STEP_{name}.png for organization and evidence.
 
         Args:
@@ -77,4 +78,13 @@ class BasePage:
         os.makedirs(screenshots_dir, exist_ok=True)
         screenshot_path = f"{screenshots_dir}/STEP_{name}.png"
         self.page.screenshot(path=screenshot_path)
+        
+        # Attach screenshot to Allure report
+        with open(screenshot_path, "rb") as image:
+            allure.attach(
+                image.read(),
+                name=f"step_{name}",
+                attachment_type=allure.attachment_type.PNG
+            )
+        
         return screenshot_path

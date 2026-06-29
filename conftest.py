@@ -1,5 +1,6 @@
 import os
 import pytest
+import allure
 from playwright.sync_api import sync_playwright, Page, Browser
 
 
@@ -52,6 +53,14 @@ def page(browser_instance: Browser, request) -> Page:
     # Take initial screenshot at test start (homepage baseline)
     initial_screenshot_path = f"{SCREENSHOTS_DIR}/INIT_{safe_name}.png"
     page.screenshot(path=initial_screenshot_path)
+    
+    # Attach initial screenshot to Allure
+    with open(initial_screenshot_path, "rb") as image:
+        allure.attach(
+            image.read(),
+            name="initial_state",
+            attachment_type=allure.attachment_type.PNG
+        )
 
     yield page
 
@@ -70,10 +79,27 @@ def page(browser_instance: Browser, request) -> Page:
     if test_failed:
         failure_screenshot_path = f"{SCREENSHOTS_DIR}/FAIL_{safe_name}.png"
         page.screenshot(path=failure_screenshot_path)
+        
+        # Attach failure screenshot to Allure
+        with open(failure_screenshot_path, "rb") as image:
+            allure.attach(
+                image.read(),
+                name="failure_state",
+                attachment_type=allure.attachment_type.PNG
+            )
 
     # save trace for every test
     trace_path = f"{TRACES_DIR}/{status}_{safe_name}.zip"
     context.tracing.stop(path=trace_path)
+    
+    # Attach trace to Allure report
+    if os.path.exists(trace_path):
+        with open(trace_path, "rb") as trace_file:
+            allure.attach(
+                trace_file.read(),
+                name="playwright_trace",
+                attachment_type="application/zip"
+            )
 
     # close context — finalizes video
     context.close()
@@ -83,6 +109,14 @@ def page(browser_instance: Browser, request) -> Page:
     if video_path and os.path.exists(video_path):
         new_video_path = f"{VIDEOS_DIR}/{status}_{safe_name}.webm"
         os.rename(video_path, new_video_path)
+        
+        # Attach video to Allure report with correct MIME type
+        with open(new_video_path, "rb") as video:
+            allure.attach(
+                video.read(),
+                name="test_video",
+                attachment_type="video/webm"
+            )
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
