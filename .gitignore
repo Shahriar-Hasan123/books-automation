@@ -9,3 +9,8 @@ screenshots/
 videos/
 traces/
 .env
+allure-report/
+allure-2.27.0/
+jdk-17.0.11+9/
+OpenJDK17U-jdk_x64_linux_hotspot_17.0.11_9.tar.gz
+allure.sh
