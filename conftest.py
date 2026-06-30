@@ -1,4 +1,5 @@
 import os
+import re
 import pytest
 import allure
 from playwright.sync_api import sync_playwright, Page, Browser
@@ -8,6 +9,18 @@ BASE_URL = "https://books.toscrape.com/index.html"
 SCREENSHOTS_DIR = "screenshots"
 VIDEOS_DIR = "videos"
 TRACES_DIR = "traces"
+
+
+def make_safe_filename(name: str) -> str:
+    """
+    Convert a test node ID into a filesystem-safe and
+    GitHub Actions artifact-safe filename.
+    Removes all characters invalid on Windows/NTFS and GitHub Actions uploads.
+    """
+    name = name.replace("/", "_").replace("::", "_")
+    name = re.sub(r'[":<>|*?\r\n]', "_", name)
+    name = re.sub(r'_+', "_", name)
+    return name
 
 
 @pytest.fixture(scope="session")
@@ -28,7 +41,7 @@ def page(browser_instance: Browser, request) -> Page:
     os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
 
     # safe test name for filenames
-    safe_name = request.node.nodeid.replace("/", "_").replace("::", "_")
+    safe_name = make_safe_filename(request.node.nodeid)
 
     # create context with video recording
     context = browser_instance.new_context(
@@ -42,11 +55,11 @@ def page(browser_instance: Browser, request) -> Page:
 
     page: Page = context.new_page()
     page.goto(BASE_URL)
-    
+
     # Take initial screenshot at test start (homepage baseline)
     initial_screenshot_path = f"{SCREENSHOTS_DIR}/INIT_{safe_name}.png"
     page.screenshot(path=initial_screenshot_path)
-    
+
     # Attach initial screenshot to Allure
     with open(initial_screenshot_path, "rb") as image:
         allure.attach(
@@ -68,12 +81,10 @@ def page(browser_instance: Browser, request) -> Page:
     status = "FAIL" if test_failed else "PASS"
 
     # Only take failure screenshot if test failed
-    # This captures the state when assertion failed
     if test_failed:
         failure_screenshot_path = f"{SCREENSHOTS_DIR}/FAIL_{safe_name}.png"
         page.screenshot(path=failure_screenshot_path)
-        
-        # Attach failure screenshot to Allure
+
         with open(failure_screenshot_path, "rb") as image:
             allure.attach(
                 image.read(),
@@ -84,8 +95,7 @@ def page(browser_instance: Browser, request) -> Page:
     # save trace for every test
     trace_path = f"{TRACES_DIR}/{status}_{safe_name}.zip"
     context.tracing.stop(path=trace_path)
-    
-    # Attach trace to Allure report
+
     if os.path.exists(trace_path):
         with open(trace_path, "rb") as trace_file:
             allure.attach(
@@ -102,8 +112,7 @@ def page(browser_instance: Browser, request) -> Page:
     if video_path and os.path.exists(video_path):
         new_video_path = f"{VIDEOS_DIR}/{status}_{safe_name}.webm"
         os.rename(video_path, new_video_path)
-        
-        # Attach video to Allure report with correct MIME type
+
         with open(new_video_path, "rb") as video:
             allure.attach(
                 video.read(),
@@ -118,18 +127,15 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
 
-    # store result on node so page fixture can read pass/fail status
     if report.when == "call":
         item.rep_call = report
 
-    # attach screenshot to HTML report on failure
     if report.when == "call" and report.failed:
         page = item.funcargs.get("page")
         if page:
-            safe_name = item.nodeid.replace("/", "_").replace("::", "_")
+            safe_name = make_safe_filename(item.nodeid)
             screenshot_path = f"{SCREENSHOTS_DIR}/FAIL_{safe_name}.png"
 
-            # attach to HTML report
             pytest_html = item.config.pluginmanager.getplugin("html")
             if pytest_html:
                 extra = getattr(report, "extra", [])
