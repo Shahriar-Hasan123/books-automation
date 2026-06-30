@@ -1,4 +1,5 @@
 import os
+import re
 import allure
 from playwright.sync_api import Page, Locator
 
@@ -45,6 +46,13 @@ class BasePage:
         self.page.goto(url)
         self.page.wait_for_load_state("domcontentloaded")
 
+    @staticmethod
+    def _sanitize_filename(name: str) -> str:
+        """Return a filesystem-safe filename component."""
+        sanitized = re.sub(r'[<>:"/\\|?*\r\n]+', "_", name)
+        sanitized = re.sub(r"[\s_]+", "_", sanitized).strip(" ._-")
+        return sanitized or "screenshot"
+
     def take_screenshot(self, name: str) -> str:
         """
         Take a screenshot at a critical test point and attach to Allure report.
@@ -52,14 +60,15 @@ class BasePage:
         """
         screenshots_dir = "screenshots"
         os.makedirs(screenshots_dir, exist_ok=True)
-        screenshot_path = f"{screenshots_dir}/STEP_{name}.png"
+        safe_name = self._sanitize_filename(name)
+        screenshot_path = os.path.join(screenshots_dir, f"STEP_{safe_name}.png")
         self.page.screenshot(path=screenshot_path)
         
         # Attach screenshot to Allure report
         with open(screenshot_path, "rb") as image:
             allure.attach(
                 image.read(),
-                name=f"step_{name}",
+                name=f"step_{safe_name}",
                 attachment_type=allure.attachment_type.PNG
             )
         
